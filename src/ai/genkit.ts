@@ -1,7 +1,7 @@
-import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/google-genai';
+import Groq from 'groq-sdk';
 
-export const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
-});
+export const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
+export const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+console.log(`[groq] model: ${GROQ_MODEL} | key set: ${!!process.env.GROQ_API_KEY}`);

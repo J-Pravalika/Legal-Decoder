@@ -14,8 +14,8 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({error: 'AI service API key is missing from environment variables.'}, {status: 500});
+  if (!process.env.GROQ_API_KEY) {
+      return NextResponse.json({error: 'GROQ_API_KEY is missing from environment variables.'}, {status: 500});
   }
   
   if (!contractText || contractText.trim().length < 50) {
