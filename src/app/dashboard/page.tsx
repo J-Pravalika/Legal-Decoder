@@ -26,12 +26,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import Chat from '@/components/chat';
 import AnalysisReport from '@/components/analysis-report';
-import { getTranslatedAnalysis, type TranslateAnalysisOutput } from '@/app/actions';
+import { getTranslatedAnalysis } from '@/app/actions';
+import type { TranslateAnalysisOutput } from '@/ai/flows/translate-analysis-flow';
 import { getOverallRisk } from '@/lib/utils';
 
 
@@ -468,9 +468,9 @@ function DashboardPageComponent() {
                     Back to Dashboard
                   </Button>
                 </div>
-                <AnalysisReport 
-                    analysisResult={processedAnalysis} 
-                    contractName={contractFileName} 
+                <AnalysisReport
+                    analysisResult={processedAnalysis}
+                    contractName={contractFileName}
                     onStartNew={handleStartNewAnalysis}
                     analysisId={analysisId}
                     onLanguageChange={handleLanguageChange}
@@ -487,19 +487,6 @@ function DashboardPageComponent() {
                         extracted_emails: contracts.find(c => c.id === analysisId)?.extracted_emails || []
                     })}
                 />
-                <Dialog>
-                  <DialogTrigger asChild>
-                      <Button className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-2xl" size="icon">
-                          <Bot className="h-8 w-8" />
-                      </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl h-[70vh] flex flex-col p-0">
-                      <DialogHeader className='p-6 pb-2'>
-                          <DialogTitle>Ask AI about this Contract</DialogTitle>
-                      </DialogHeader>
-                      <Chat contractText={contractText} />
-                  </DialogContent>
-                </Dialog>
             </div>
         ) : (
           <div className="container mx-auto max-w-4xl py-12 px-6 sm:px-8 md:px-4 flex items-center justify-center h-full">

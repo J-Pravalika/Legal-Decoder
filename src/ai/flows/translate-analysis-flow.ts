@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 const SupportedLanguagesSchema = z.enum(['en', 'hi', 'te', 'ta']);
 
-export const TranslateAnalysisInputSchema = z.object({
+const TranslateAnalysisInputSchema = z.object({
   analysis: z.object({
     summary: z.string(),
     riskReason: z.string(),
@@ -15,7 +15,7 @@ export const TranslateAnalysisInputSchema = z.object({
 });
 export type TranslateAnalysisInput = z.infer<typeof TranslateAnalysisInputSchema>;
 
-export const TranslateAnalysisOutputSchema = z.object({
+const TranslateAnalysisOutputSchema = z.object({
   translatedSummary: z.string(),
   translatedRiskReason: z.string(),
   translatedRecommendation: z.string(),

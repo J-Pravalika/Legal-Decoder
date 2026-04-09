@@ -24,6 +24,7 @@ const loggedInLinks = [
   { href: "/analyze", label: "Analyze Contract" },
   { href: "/compare", label: "Compare" },
   { href: "/clause-explorer", label: "Clause Explorer" },
+  { href: "/chat", label: "AI Chat" },
 ];
 
 export function Header() {

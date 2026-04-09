@@ -14,8 +14,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/lib/supabaseClient';
 import AnalysisReport from '@/components/analysis-report';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import Chat from '@/components/chat';
 import { getTranslatedAnalysis } from '@/app/actions';
 import { type TranslateAnalysisOutput } from '@/ai/flows/translate-analysis-flow';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -263,9 +261,9 @@ function AnalyzePageComponent({ user }: { user: User }) {
             </div>
         ) : processedAnalysis ? (
             <div className="relative">
-                <AnalysisReport 
-                    analysisResult={processedAnalysis} 
-                    contractName={contractFileName} 
+                <AnalysisReport
+                    analysisResult={processedAnalysis}
+                    contractName={contractFileName}
                     onStartNew={handleStartNewAnalysis}
                     analysisId={analysisId}
                     onLanguageChange={handleLanguageChange}
@@ -273,19 +271,6 @@ function AnalyzePageComponent({ user }: { user: User }) {
                     isTranslating={isTranslating}
                     onStartNegotiation={handleStartNegotiation}
                 />
-                <Dialog>
-                  <DialogTrigger asChild>
-                      <Button className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-2xl" size="icon">
-                          <Bot className="h-8 w-8" />
-                      </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl h-[70vh] flex flex-col p-0">
-                      <DialogHeader className='p-6 pb-2'>
-                          <DialogTitle>Ask AI about this Contract</DialogTitle>
-                      </DialogHeader>
-                      <Chat contractText={contractText} />
-                  </DialogContent>
-                </Dialog>
             </div>
         ) : (
           <UploadSection onAnalyze={handleAnalyze} />
@@ -341,6 +326,7 @@ function AnalyzePageComponent({ user }: { user: User }) {
 
 function UploadSection({ onAnalyze }: { onAnalyze: (text: string, fileName: string) => void }) {
   const [isParsing, setIsParsing] = useState(false);
+  const [pasteText, setPasteText] = useState('');
   const { toast } = useToast();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -392,16 +378,28 @@ function UploadSection({ onAnalyze }: { onAnalyze: (text: string, fileName: stri
     e.target.value = ''; // Reset file input
   }
 
-  const handlePasteAndAnalyze = async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-      const pastedText = e.clipboardData.getData('text');
-      if (pastedText.trim().length > 50) {
-        onAnalyze(pastedText, 'Pasted Contract');
-      } else {
-        toast({
-          title: "Paste Text",
-          description: "Paste your full contract text to start the analysis."
-        })
-      }
+  const handlePasteAndAnalyze = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const pastedText = e.clipboardData.getData('text');
+    if (pastedText.trim().length > 50) {
+      onAnalyze(pastedText, 'Pasted Contract');
+    } else {
+      toast({
+        title: "Paste Text",
+        description: "Paste your full contract text to start the analysis."
+      });
+    }
+  };
+
+  const handleManualAnalyze = () => {
+    if (pasteText.trim().length > 50) {
+      onAnalyze(pasteText, 'Pasted Contract');
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Text Too Short',
+        description: 'Please enter at least 50 characters of contract text.',
+      });
+    }
   };
 
   const isDisabled = isParsing;
@@ -429,13 +427,22 @@ function UploadSection({ onAnalyze }: { onAnalyze: (text: string, fileName: stri
                     </label>
                     <p className="text-xs text-muted-foreground text-center mt-4">Your documents are encrypted and processed securely.</p>
                 </TabsContent>
-                <TabsContent value="paste" className="mt-6">
+                <TabsContent value="paste" className="mt-6 space-y-4">
                     <Textarea
-                        placeholder="Paste your contract text here to begin analysis..."
+                        placeholder="Paste your contract text here to begin analysis, or type it manually below..."
                         onPaste={handlePasteAndAnalyze}
+                        value={pasteText}
+                        onChange={(e) => setPasteText(e.target.value)}
                         className="min-h-[200px] text-sm bg-transparent"
                         disabled={isDisabled}
                     />
+                    <Button
+                        className="w-full"
+                        onClick={handleManualAnalyze}
+                        disabled={isDisabled || pasteText.trim().length <= 50}
+                    >
+                        Analyze Text
+                    </Button>
                 </TabsContent>
             </Tabs>
         </div>

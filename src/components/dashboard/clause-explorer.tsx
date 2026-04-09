@@ -218,15 +218,19 @@ const ClauseExplorer = () => {
       try {
         const result = await defineLegalTerm({ term: searchTerm });
         setSelectedClause({
-          ...result,
           title: result.term,
+          alias: undefined,
+          simpleExplanation: result.simpleExplanation,
+          standardWording: result.standardWording,
+          implicationsAndRisks: result.implicationsAndRisks,
+          riskLevel: result.riskLevel,
           icon: <Search className="h-5 w-5 text-accent" />,
           whyItMatters: [{
               title: "Key Implications",
               text: result.implicationsAndRisks,
               icon: <AlertTriangle className="h-5 w-5 text-yellow-500"/>
           }],
-          relatedClauses: [] // AI response doesn't include this yet
+          relatedClauses: [],
         });
       } catch (error) {
         console.error('Failed to define legal term:', error);

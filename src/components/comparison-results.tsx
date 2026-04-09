@@ -86,17 +86,23 @@ export default function ComparisonResults({ results }: { results: MultiCompareCo
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {contracts.map(c => (
-                            <TableRow key={c.id}>
-                                <TableCell className="font-medium">{c.name}</TableCell>
-                                <TableCell>
-                                     <Badge variant={riskLevelToVariant(c.analysis.length > 0 ? c.analysis[0].riskLevel : 'secondary')}>
-                                        {c.analysis.length > 0 ? c.analysis.reduce((prev, current) => (prev && prev.riskLevel === 'High') ? prev : current).riskLevel : 'N/A'}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">{c.analysis.length}</TableCell>
-                            </TableRow>
-                        ))}
+                        {contracts.map(c => {
+                            const clauses = c.analysis.clauses ?? [];
+                            const overallRisk = clauses.length > 0
+                                ? clauses.reduce((prev, current) => (prev && prev.riskLevel === 'High') ? prev : current).riskLevel
+                                : 'N/A';
+                            return (
+                                <TableRow key={c.id}>
+                                    <TableCell className="font-medium">{c.name}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={riskLevelToVariant(overallRisk)}>
+                                            {overallRisk}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">{clauses.length}</TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </CardContent>

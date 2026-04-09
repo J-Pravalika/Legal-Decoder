@@ -3,7 +3,7 @@ import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import { FirebaseClientProvider } from '@/firebase';
+import { FloatingChatWidget } from '@/components/floating-chat-widget';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const poppins = Poppins({
@@ -43,10 +43,9 @@ export default function RootLayout({
           poppins.variable
         )}
       >
-        <FirebaseClientProvider>
-          {children}
-        </FirebaseClientProvider>
+        {children}
         <Toaster />
+        <FloatingChatWidget />
       </body>
     </html>
   );

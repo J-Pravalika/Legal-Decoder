@@ -3,6 +3,7 @@
 
 import { Clause } from '@/lib/types';
 import { useMemo } from 'react';
+import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -207,7 +208,8 @@ export default function AnalysisReport({
 
           <Button variant="outline" onClick={onStartNew}><RotateCcw className="mr-2 h-4 w-4" /> New Analysis</Button>
           
-          {onStartNegotiation && (
+          {/* Negotiation feature temporarily disabled */}
+          {/* {onStartNegotiation && (
             <Button 
                 onClick={onStartNegotiation} 
                 disabled={!canStartNegotiation} 
@@ -216,7 +218,7 @@ export default function AnalysisReport({
             >
                 <Bot className="mr-2 h-4 w-4" /> Start Negotiation
             </Button>
-          )}
+          )} */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -327,7 +329,7 @@ export default function AnalysisReport({
                            <p className="text-sm text-white leading-relaxed">{clause.summary}</p>
                            <p className="text-xs text-muted-foreground mt-4">{clause.riskReason}</p>
                            {(clause.riskLevel === 'High' || clause.riskLevel === 'Medium') && (
-                            <a href="#" className="text-xs text-primary hover:underline mt-2 block">Why is this critical?</a>
+                            <Link href="/clause-explorer" className="text-xs text-primary hover:underline mt-2 block">Why is this critical?</Link>
                            )}
                         </div>
                       </div>

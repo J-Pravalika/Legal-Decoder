@@ -11,7 +11,8 @@
  * receiving pre-extracted contractText from the client.
  */
 
-import pdfParse from 'pdf-parse';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdfParse = require('pdf-parse') as (buffer: Buffer) => Promise<{ text: string }>;
 
 // ---------------------------------------------------------------------------
 // Primary extractor — pdf-parse (server-side, no network)

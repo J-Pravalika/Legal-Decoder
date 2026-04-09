@@ -78,7 +78,14 @@ function ProfilePageComponent() {
         console.error('Error fetching contracts:', contractsError);
         toast({ variant: 'destructive', title: 'Error', description: 'Could not fetch usage stats.' });
       } else {
-        setContracts(contractsData as Contract[]);
+        setContracts(contractsData.map((item: any) => ({
+          id: item.id ?? '',
+          name: item.file_name ?? '',
+          status: item.status ?? 'Analyzed',
+          riskLevel: item.risk_level,
+          clauses: item.clauses_count ?? 0,
+          analyzedAt: item.analyzed_at ?? new Date().toISOString(),
+        })) as Contract[]);
       }
 
       setIsLoading(false);

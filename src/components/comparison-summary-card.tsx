@@ -38,7 +38,8 @@ const itemVariants = {
 export default function ComparisonSummaryCard({ contract }: ComparisonSummaryCardProps) {
 
    const { riskDistribution, overallRisk } = useMemo(() => {
-    const dist = contract.analysis.reduce((acc, clause) => {
+    const clauses = contract.analysis.clauses ?? [];
+    const dist = clauses.reduce((acc, clause) => {
         const key = clause.riskLevel as keyof typeof PIE_CHART_COLORS;
         acc[key] = (acc[key] || 0) + 1;
         return acc;
@@ -50,7 +51,7 @@ export default function ComparisonSummaryCard({ contract }: ComparisonSummaryCar
 
     return {
       riskDistribution: distribution,
-      overallRisk: getOverallRisk(contract.analysis),
+      overallRisk: getOverallRisk(clauses),
     };
   }, [contract.analysis]);
   

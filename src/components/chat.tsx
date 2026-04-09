@@ -34,6 +34,12 @@ export default function Chat({ contractText }: ChatProps) {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    // Capture history BEFORE adding the new user message
+    const historyForApi = messages.map((m) => ({
+      role: m.sender === 'user' ? 'user' : 'assistant',
+      content: m.text,
+    }));
+
     const userMessage: Message = {
       id: Date.now(),
       sender: 'user',
@@ -47,7 +53,7 @@ export default function Chat({ contractText }: ChatProps) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contractText, question: input }),
+        body: JSON.stringify({ contractText, question: input, history: historyForApi }),
       });
       
       const result: { success: boolean; data: AnswerContractQuestionsOutput | null, error: string | null } = await response.json();
